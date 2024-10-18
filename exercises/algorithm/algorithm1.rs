@@ -35,15 +35,15 @@ impl<T> Default for LinkedList<T> {
     }
 }
 
+
 impl<T> LinkedList<T> {
-    pub fn new() -> Self {
-        Self {
+    pub fn new() -> LinkedList<T> {
+        LinkedList {
             length: 0,
             start: None,
             end: None,
         }
     }
-
     pub fn add(&mut self, obj: T) {
         let mut node = Box::new(Node::new(obj));
         node.next = None;
@@ -69,16 +69,38 @@ impl<T> LinkedList<T> {
             },
         }
     }
+}
+
+impl<T: Ord+Copy> LinkedList<T> {
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		let mut list_c = LinkedList::<T>::new();
+        //把list_a和list_b的链表中的值都提取出来放到vec_c中
+        let mut vec_c : Vec<T> = Vec::new();
+        let mut ptr_a = list_a.start;
+        let mut ptr_b = list_b.start;
+        while ptr_a.is_some(){
+            let node_a = unsafe{ptr_a.unwrap().as_ref()};
+            vec_c.push(node_a.val);
+            ptr_a = node_a.next;
         }
+        while ptr_b.is_some(){
+            let node_b = unsafe{ptr_b.unwrap().as_ref()};
+            vec_c.push(node_b.val);
+            ptr_b = node_b.next;
+        }
+        //对vec_c进行排序
+        vec_c.sort();
+        //把vec_c中的值放到list_c中
+        for i in 0..vec_c.len(){
+            list_c.add(vec_c[i]);
+        }
+        list_c
 	}
 }
+
+
 
 impl<T> Display for LinkedList<T>
 where
