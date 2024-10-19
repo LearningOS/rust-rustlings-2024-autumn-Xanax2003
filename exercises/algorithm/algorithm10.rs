@@ -29,9 +29,22 @@ impl Graph for UndirectedGraph {
         &self.adjacency_table
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        let (src, dst, weight) = edge;
+
+        // 添加边 src -> dst
+        self.adjacency_table
+            .entry(src.to_string())
+            .or_insert_with(Vec::new)
+            .push((dst.to_string(), weight));
+
+        // 添加边 dst -> src
+        self.adjacency_table
+            .entry(dst.to_string())
+            .or_insert_with(Vec::new)
+            .push((src.to_string(), weight));
     }
 }
+
 pub trait Graph {
     fn new() -> Self;
     fn adjacency_table_mutable(&mut self) -> &mut HashMap<String, Vec<(String, i32)>>;
